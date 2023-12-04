@@ -5,8 +5,14 @@
 
 package main
 
-import "fmt"
+import (
+	"miniblog/internal/miniblog"
+	"os"
+)
 
 func main() {
-	fmt.Println("Hello MiniBlog!")
+	command := miniblog.NewMiniBlogCommand()
+	if err := command.Execute(); err != nil {
+		os.Exit(1)
+	}
 }
