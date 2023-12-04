@@ -1,0 +1,3 @@
+cmd = "go build -o _output/miniblog.exe ./cmd/miniblog/main.go"
+
+bin = "_output/miniblog.exe"
