@@ -1,7 +1,9 @@
 package miniblog
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
 )
@@ -52,5 +54,13 @@ Find more miniblog information at:
 // 实际业务代码入口函数
 func run() error {
 	fmt.Println("hello miniblog")
+
+	// 获取viper读到的所有配置项
+	settings, _ := json.Marshal(viper.AllSettings())
+	fmt.Println(string(settings))
+
+	// 打印db -> username 配置的值
+	fmt.Println(viper.GetString("db.username"))
+
 	return nil
 }

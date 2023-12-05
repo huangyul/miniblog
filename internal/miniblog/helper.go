@@ -3,12 +3,16 @@ package miniblog
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
 const (
+	// 定义放置 miniblog 服务配置的默认目录
+	recommendedHomeDir = ".miniblog"
 	// 配置文件名
 	defaultConfigName = "miniblog.yaml"
 )
@@ -24,8 +28,11 @@ func initConfig() {
 		// 如果获取失败，则打印错误信息，并退出程序
 		cobra.CheckErr(err)
 
-		// 将获取的主目录添加到配置文件搜索中
-		viper.AddConfigPath(home)
+		// 将home/recommendedHomeDir加入配置文件搜索路径中
+		viper.AddConfigPath(filepath.Join(home, recommendedHomeDir))
+
+		// 将当前目录添加到配置文件搜索中
+		viper.AddConfigPath(".")
 
 		// 设置配置文件类型
 		viper.SetConfigType("yaml")
@@ -37,8 +44,18 @@ func initConfig() {
 	// 读取环境变量
 	viper.AutomaticEnv()
 
+	// 读取环境变量前缀为 MINIBLOG，如果是小写，会转为大写
+	viper.SetEnvPrefix("MINIBLOG")
+
+	// 将viper.get(key) 中的key中的'.'转为'-'
+	replacer := strings.NewReplacer(".", "-")
+	viper.EnvKeyReplacer(replacer)
+
 	// 开始读取配置文件
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
+
+	// 打印viper当前使用的配置文件
+	fmt.Fprintln(os.Stdout, "Using config file:", viper.ConfigFileUsed())
 }
