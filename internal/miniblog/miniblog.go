@@ -2,8 +2,11 @@ package miniblog
 
 import (
 	"fmt"
+
 	"github.com/spf13/cobra"
 )
+
+var cfgFile string
 
 // NewMiniBlogCommand 构建一个 cobra.Command 对象，之后可以使用 Execute 来启动程序
 func NewMiniBlogCommand() *cobra.Command {
@@ -33,6 +36,15 @@ Find more miniblog information at:
 			return nil
 		},
 	}
+
+	// 使initConfig函数在每个命令执行都会被调用
+	cobra.OnInitialize(initConfig)
+
+	// Cobra 支持持久性标志(PersistentFlag)，该标志可用于它所分配的命令以及该命令下的每个子命令
+	cmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "The path to the miniblog configuration file. Empty string for no configuration file.")
+
+	// Cobra 也支持本地标志，本地标志只能在其所绑定的命令上使用
+	cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	return cmd
 }
