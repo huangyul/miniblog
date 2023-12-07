@@ -6,13 +6,27 @@
 package main
 
 import (
-	"miniblog/internal/miniblog"
-	"os"
+	"time"
+
+	"go.uber.org/zap"
 )
 
 func main() {
-	command := miniblog.NewMiniBlogCommand()
-	if err := command.Execute(); err != nil {
-		os.Exit(1)
-	}
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
+
+	url := "http://baidu.com"
+	logger.Info("failed to fetch url",
+		zap.String("url", url),
+		zap.Int("accept", 3),
+		zap.Duration("backoff", time.Second),
+	)
+
+	sugar := logger.Sugar()
+	sugar.Infow("failed to fetch url", "url", url, "accept", 3)
+
+	// command := miniblog.NewMiniBlogCommand()
+	// if err := command.Execute(); err != nil {
+	// 	os.Exit(1)
+	// }
 }
