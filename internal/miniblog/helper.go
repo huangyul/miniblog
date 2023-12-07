@@ -1,7 +1,7 @@
 package miniblog
 
 import (
-	"fmt"
+	"miniblog/internal/pkg/log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -53,9 +53,19 @@ func initConfig() {
 
 	// 开始读取配置文件
 	if err := viper.ReadInConfig(); err != nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+		log.Errorw("Failed to read viper configuration file", "err", err)
 	}
 
 	// 打印viper当前使用的配置文件
-	fmt.Fprintln(os.Stdout, "Using config file:", viper.ConfigFileUsed())
+	log.Infow("Using config file", "file", viper.ConfigFileUsed())
+}
+
+func logOptions() *log.Options {
+	return &log.Options{
+		DisableCaller:     viper.GetBool("log.disable-caller"),
+		DisableStacktrace: viper.GetBool("log.disable-stacktrace"),
+		Level:             viper.GetString("log.lever"),
+		Format:            viper.GetString("log.format"),
+		OutPutPaths:       viper.GetStringSlice("output-paths"),
+	}
 }
