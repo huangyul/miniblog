@@ -6,24 +6,43 @@
 package main
 
 import (
-	"time"
+	"net/http"
 
-	"go.uber.org/zap"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	logger, _ := zap.NewProduction()
-	defer logger.Sync()
 
-	url := "http://baidu.com"
-	logger.Info("failed to fetch url",
-		zap.String("url", url),
-		zap.Int("accept", 3),
-		zap.Duration("backoff", time.Second),
-	)
+	g := gin.Default()
 
-	sugar := logger.Sugar()
-	sugar.Infow("failed to fetch url", "url", url, "accept", 3)
+	g.NoRoute(func(ctx *gin.Context) {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"status":  10003,
+			"message": "page not found",
+		})
+	})
+
+	g.GET("/healthz", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"status":  0,
+			"message": "server is ok",
+		})
+	})
+
+	g.Run(":3333")
+
+	// logger, _ := zap.NewProduction()
+	// defer logger.Sync()
+
+	// url := "http://baidu.com"
+	// logger.Info("failed to fetch url",
+	// 	zap.String("url", url),
+	// 	zap.Int("accept", 3),
+	// 	zap.Duration("backoff", time.Second),
+	// )
+
+	// sugar := logger.Sugar()
+	// sugar.Infow("failed to fetch url", "url", url, "accept", 3)
 
 	// command := miniblog.NewMiniBlogCommand()
 	// if err := command.Execute(); err != nil {

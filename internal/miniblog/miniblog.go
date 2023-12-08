@@ -1,10 +1,12 @@
 package miniblog
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/spf13/viper"
 	"miniblog/internal/pkg/log"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
 )
@@ -57,13 +59,34 @@ Find more miniblog information at:
 
 // 实际业务代码入口函数
 func run() error {
-	// 获取viper读到的所有配置项
-	settings, _ := json.Marshal(viper.AllSettings())
-	log.Infow(string(settings))
+	// 设置 Gin 模式
+	gin.SetMode(viper.GetString("runmode"))
 
-	// 打印db -> username 配置的值
-	fmt.Println(viper.GetString("db.username"))
-	log.Infow(string(viper.GetString("db.username")))
+	// 创建 Gin 引擎
+	g := gin.Default()
+
+	// 注册 404
+	g.NoRoute(func(ctx *gin.Context) {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"code": 10003, "message": "Page not found.",
+		})
+	})
+
+	// 注册 /healthz
+	g.GET("/healthz", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"status": "ok",
+		})
+	})
+
+	g.GET("/test", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"status":  0,
+			"message": "ok",
+		})
+	})
+
+	g.Run(":3333")
 
 	return nil
 }
