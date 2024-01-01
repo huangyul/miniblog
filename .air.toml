@@ -1,5 +1,0 @@
-cmd = "go build -o _output/miniblog ./cmd/miniblog/main.go"
-
-args_bin = ["-c", "configs/miniblog.yaml"]
-
-bin = "_output/miniblog"
