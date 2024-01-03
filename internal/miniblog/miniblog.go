@@ -1,9 +1,13 @@
 package miniblog
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
+
+var cfgFile string
 
 func NewMiniBlogCommand() *cobra.Command {
 	cmd := &cobra.Command{
@@ -34,11 +38,21 @@ Find more miniblog information at:
 		},
 	}
 
+	// 使 initconfig 函数在每个命令运行时都会被调用以读取配置
+	cobra.OnInitialize(initConfig)
+
+	cmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "The path to the miniblog configuration file, Empty string fro no configuration file.")
+
+	// 本地标志
+	cmd.Flags().BoolP("toogle", "t", false, "help message for toggle")
+
 	return cmd
 }
 
 // run 是实际业务代码入口函数
 func run() error {
-	fmt.Print("hello miniblog")
+	setting, _ := json.Marshal(viper.AllSettings())
+	fmt.Println(string(setting))
+	fmt.Println(viper.GetString("db.username"))
 	return nil
 }
