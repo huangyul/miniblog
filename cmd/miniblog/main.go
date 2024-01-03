@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	_ "go.uber.org/automaxprocs"
+	"miniblog/internal/miniblog"
+	"os"
+)
 
 func main() {
-	fmt.Print("hello world")
+	commoand := miniblog.NewMiniBlogCommand()
+	if err := commoand.Execute(); err != nil {
+		os.Exit(1)
+	}
 }
