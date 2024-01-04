@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"miniblog/internal/pkg/log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -52,4 +53,15 @@ func initConfig() {
 	}
 
 	fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+}
+
+// logOptions 从 viper 中读取日志配置
+func logOptions() *log.Options {
+	return &log.Options{
+		DisableCaller:     viper.GetBool("log.disable-caller"),
+		DisableStacktrace: viper.GetBool("log.disable-stacktrace"),
+		Level:             viper.GetString("log.level"),
+		Format:            viper.GetString("log.format"),
+		OutputPaths:       viper.GetStringSlice("log.output-paths"),
+	}
 }

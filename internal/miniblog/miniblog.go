@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"miniblog/internal/pkg/log"
 )
 
 var cfgFile string
@@ -24,6 +25,11 @@ Find more miniblog information at:
 		SilenceUsage: true,
 		// 指定调用 cmd.Execute() 时，执行Run函数
 		RunE: func(cmd *cobra.Command, args []string) error {
+
+			// 初始化日志
+			log.Init(logOptions())
+			defer log.Sync() // Sync 将缓存中的日志刷新到磁盘文件中
+
 			return run()
 		},
 		// 这里设置命令运行时，不需要指定命令行参数
@@ -52,7 +58,7 @@ Find more miniblog information at:
 // run 是实际业务代码入口函数
 func run() error {
 	setting, _ := json.Marshal(viper.AllSettings())
-	fmt.Println(string(setting))
-	fmt.Println(viper.GetString("db.username"))
+	log.Infow(string(setting))
+	log.Infow(viper.GetString("db.username"))
 	return nil
 }
