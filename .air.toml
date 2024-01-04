@@ -1,4 +1,6 @@
 # 编译需要执行的shell脚本
 cmd = "go build -o _output/miniblog.exe -v cmd/miniblog/main.go"
+# 添加运行时的参数
+args_bin = ["-c", "configs/miniblog.yaml"]
 # 由 cmd 命令得到的二进制文件
 bin = "_output/miniblog"
