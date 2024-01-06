@@ -29,7 +29,7 @@ func initConfig() {
 		// 设置 viper 的搜索路径
 		viper.AddConfigPath(filepath.Join(home, recommendedHomeDir))
 
-		viper.AddConfigPath(".")
+		viper.AddConfigPath(filepath.Join(".", "configs"))
 
 		// 设置配置文件格式为 yaml
 		viper.SetConfigType("yaml")
