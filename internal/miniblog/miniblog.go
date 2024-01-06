@@ -1,11 +1,13 @@
 package miniblog
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"miniblog/internal/pkg/log"
+	"net/http"
 )
 
 var cfgFile string
@@ -57,8 +59,33 @@ Find more miniblog information at:
 
 // run 是实际业务代码入口函数
 func run() error {
-	setting, _ := json.Marshal(viper.AllSettings())
-	log.Infow(string(setting))
-	log.Infow(viper.GetString("db.username"))
+
+	// 设置 gin 模式
+	gin.SetMode(viper.GetString("runmode"))
+
+	// 创建 gin 实例
+	g := gin.New()
+
+	// 注册 404 路由
+	g.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusNotFound, gin.H{"code": 10003, "message": "Page not found."})
+	})
+
+	// 注册 /healthz handler
+	g.GET("/healthz", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"status": "ok"})
+	})
+
+	// 创建 HTTP Server 实例
+	httpsrv := &http.Server{Addr: viper.GetString("addr"), Handler: g}
+
+	log.Infow("start to listening the incoming requrests on http address", "addr", viper.GetString("addr"))
+
+	if err := httpsrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		log.Errorw(err.Error())
+	}
+
+	return nil
+
 	return nil
 }
