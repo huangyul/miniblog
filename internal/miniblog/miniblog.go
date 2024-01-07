@@ -7,7 +7,11 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"miniblog/internal/pkg/log"
+	"miniblog/internal/pkg/middleware"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 var cfgFile string
@@ -66,6 +70,10 @@ func run() error {
 	// 创建 gin 实例
 	g := gin.New()
 
+	mws := []gin.HandlerFunc{gin.Recovery(), middleware.Cors(), middleware.RequestID()}
+
+	g.Use(mws...)
+
 	// 注册 404 路由
 	g.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"code": 10003, "message": "Page not found."})
@@ -85,7 +93,13 @@ func run() error {
 		log.Errorw(err.Error())
 	}
 
-	return nil
+	// 等待中断信号优雅关闭服务器（10秒超时）
+	quit := make(chan os.Signal)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	// 这里会阻塞，当收到上面两种信号
+	<-quit
+	log.Infow("Shutting down server ...")
 
 	return nil
+
 }
