@@ -1,2 +1,9 @@
 db:
   username: huang
+
+log:
+  disable-caller: false
+  disable-stacktrace: false
+  level: debug
+  format: console
+  output-paths: [ stdout ]

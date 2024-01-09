@@ -2,6 +2,7 @@ package miniblog
 
 import (
 	"fmt"
+	"miniblog/internal/log"
 	"os"
 
 	"github.com/spf13/viper"
@@ -30,4 +31,15 @@ func initConfig() {
 	}
 
 	fmt.Fprintln(os.Stdout, "using config file:", viper.ConfigFileUsed())
+}
+
+// logOptions 从 viper 中读取日志配置
+func logOptions() *log.Options {
+	return &log.Options{
+		DisableCaller:     viper.GetBool("log.disable-caller"),
+		DisableStacktrace: viper.GetBool("log.disable-stacktrace"),
+		Level:             viper.GetString("log.level"),
+		Format:            viper.GetString("log.format"),
+		OutputPaths:       viper.GetStringSlice("log.output-paths"),
+	}
 }

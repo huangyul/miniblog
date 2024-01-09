@@ -3,6 +3,7 @@ package miniblog
 import (
 	"encoding/json"
 	"fmt"
+	"miniblog/internal/log"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -16,8 +17,10 @@ func NewMiniBlogCommand() *cobra.Command {
 		Short: "a golang practice project",
 		Long:  "Long desc Long desc Long desc Long desc Long desc",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			run()
-			return nil
+			log.Init(logOptions())
+			defer log.Sync()
+
+			return run()
 		},
 		Args: func(cmd *cobra.Command, args []string) error {
 			for _, arg := range args {
@@ -34,8 +37,10 @@ func NewMiniBlogCommand() *cobra.Command {
 	return cmd
 }
 
-func run() {
+func run() error {
 	data, _ := json.Marshal(viper.AllSettings())
-	fmt.Println(string(data))
-	fmt.Println(viper.GetString("db.username"))
+	log.Infow(string(data))
+	log.Infow(viper.GetString("db.username"))
+
+	return nil
 }

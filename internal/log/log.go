@@ -16,6 +16,13 @@ var (
 )
 
 type Logger interface {
+	Debugw(msg string, keysAndValues ...interface{})
+	Infow(msg string, keysAndValues ...interface{})
+	Warnw(msg string, keysAndValues ...interface{})
+	Errorw(msg string, keysAndValues ...interface{})
+	Panicw(msg string, keysAndValues ...interface{})
+	Fatalw(msg string, keysAndValues ...interface{})
+	Sync()
 }
 
 type zapLogger struct {
@@ -68,4 +75,60 @@ func NewLogger(opts *Options) *zapLogger {
 	logger := &zapLogger{z: z}
 
 	return logger
+}
+
+func (l *zapLogger) Debugw(msg string, keysAndValues ...interface{}) {
+	l.z.Sugar().Debugw(msg, keysAndValues)
+}
+
+func Debugw(msg string, keysAndValues ...interface{}) {
+	std.z.Sugar().Debugw(msg, keysAndValues)
+}
+
+func (l *zapLogger) Infow(msg string, keysAndValues ...interface{}) {
+	l.z.Sugar().Infow(msg, keysAndValues)
+}
+
+func Infow(msg string, keysAndValues ...interface{}) {
+	std.z.Sugar().Infow(msg, keysAndValues)
+}
+
+func (l *zapLogger) Warnw(msg string, keysAndValues ...interface{}) {
+	l.z.Sugar().Warnw(msg, keysAndValues)
+}
+
+func Warnw(msg string, keysAndValues ...interface{}) {
+	std.z.Sugar().Warnw(msg, keysAndValues)
+}
+
+func (l *zapLogger) Errorw(msg string, keysAndValues ...interface{}) {
+	l.z.Sugar().Error(msg, keysAndValues)
+}
+
+func Errorw(msg string, keysAndValues ...interface{}) {
+	std.z.Sugar().Error(msg, keysAndValues)
+}
+
+func (l *zapLogger) Panicw(msg string, keysAndValues ...interface{}) {
+	l.z.Sugar().Panicw(msg, keysAndValues)
+}
+
+func Panicw(msg string, keysAndValues ...interface{}) {
+	std.z.Sugar().Panicw(msg, keysAndValues)
+}
+
+func (l *zapLogger) Fatalw(msg string, keysAndValues ...interface{}) {
+	l.z.Sugar().Fatalw(msg, keysAndValues)
+}
+
+func Fatalw(msg string, keysAndValues ...interface{}) {
+	std.z.Sugar().Fatalw(msg, keysAndValues)
+}
+
+func (l *zapLogger) Sync() {
+	_ = l.z.Sync()
+}
+
+func Sync() {
+	_ = std.z.Sync()
 }
