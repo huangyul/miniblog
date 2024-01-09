@@ -5,7 +5,7 @@ all: clean tidy build
 
 .PHONY: build
 build:
-	@go build -o $(OUTPUT_DIR)/miniblog.exe -v cmd/miniblog/main.go
+	@go build -o $(OUTPUT_DIR)/miniblog -v cmd/miniblog/main.go
 
 .PHONY: tidy
 tidy:

@@ -2,7 +2,7 @@ package miniblog
 
 import (
 	"fmt"
-	"miniblog/internal/log"
+	"miniblog/internal/pkg/log"
 	"os"
 
 	"github.com/spf13/viper"
