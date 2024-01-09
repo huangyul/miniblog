@@ -1,10 +1,14 @@
 package miniblog
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
+
+var cfgFile string
 
 func NewMiniBlogCommand() *cobra.Command {
 	cmd := &cobra.Command{
@@ -25,9 +29,13 @@ func NewMiniBlogCommand() *cobra.Command {
 		},
 	}
 
+	cobra.OnInitialize(initConfig)
+
 	return cmd
 }
 
 func run() {
-	fmt.Println("hello world")
+	data, _ := json.Marshal(viper.AllSettings())
+	fmt.Println(string(data))
+	fmt.Println(viper.GetString("db.username"))
 }
