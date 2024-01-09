@@ -1,6 +1,12 @@
+# 通用配置
+runmode: debug # gin 开发模式，可选值：debug, release, test
+addr: :8088
+
+# 数据库配置
 db:
   username: huang
 
+# 日志配置
 log:
   disable-caller: false
   disable-stacktrace: false
