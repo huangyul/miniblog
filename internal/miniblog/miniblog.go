@@ -4,9 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	"miniblog/internal/pkg/core"
+	"miniblog/internal/pkg/errno"
 	"miniblog/internal/pkg/log"
 	"miniblog/internal/pkg/middleware"
 	"net/http"
@@ -14,6 +13,10 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var cfgFile string
@@ -55,11 +58,13 @@ func run() error {
 	g.Use(mws...)
 
 	g.NoRoute(func(ctx *gin.Context) {
-		ctx.JSON(http.StatusNotFound, gin.H{"code": 404, "message": "page not found"})
+		// ctx.JSON(http.StatusNotFound, gin.H{"code": 404, "message": "page not found"})
+		core.WriteResponse(ctx, errno.ErrPageNotFound, nil)
 	})
 
 	g.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
+		core.WriteResponse(ctx, nil, map[string]string{"status": "ok"})
+		// ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
 	httpsrv := &http.Server{Addr: viper.GetString("addr"), Handler: g}
