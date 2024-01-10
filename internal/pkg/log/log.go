@@ -78,27 +78,27 @@ func NewLogger(opts *Options) *zapLogger {
 }
 
 func (l *zapLogger) Debugw(msg string, keysAndValues ...interface{}) {
-	l.z.Sugar().Debugw(msg, keysAndValues)
+	l.z.Sugar().Debugw(msg, keysAndValues...)
 }
 
 func Debugw(msg string, keysAndValues ...interface{}) {
-	std.z.Sugar().Debugw(msg, keysAndValues)
+	std.z.Sugar().Debugw(msg, keysAndValues...)
 }
 
 func (l *zapLogger) Infow(msg string, keysAndValues ...interface{}) {
-	l.z.Sugar().Infow(msg, keysAndValues)
+	l.z.Sugar().Infow(msg, keysAndValues...)
 }
 
 func Infow(msg string, keysAndValues ...interface{}) {
-	std.z.Sugar().Infow(msg, keysAndValues)
+	std.z.Sugar().Infow(msg, keysAndValues...)
 }
 
 func (l *zapLogger) Warnw(msg string, keysAndValues ...interface{}) {
-	l.z.Sugar().Warnw(msg, keysAndValues)
+	l.z.Sugar().Warnw(msg, keysAndValues...)
 }
 
 func Warnw(msg string, keysAndValues ...interface{}) {
-	std.z.Sugar().Warnw(msg, keysAndValues)
+	std.z.Sugar().Warnw(msg, keysAndValues...)
 }
 
 func (l *zapLogger) Errorw(msg string, keysAndValues ...interface{}) {
@@ -110,19 +110,19 @@ func Errorw(msg string, keysAndValues ...interface{}) {
 }
 
 func (l *zapLogger) Panicw(msg string, keysAndValues ...interface{}) {
-	l.z.Sugar().Panicw(msg, keysAndValues)
+	l.z.Sugar().Panicw(msg, keysAndValues...)
 }
 
 func Panicw(msg string, keysAndValues ...interface{}) {
-	std.z.Sugar().Panicw(msg, keysAndValues)
+	std.z.Sugar().Panicw(msg, keysAndValues...)
 }
 
 func (l *zapLogger) Fatalw(msg string, keysAndValues ...interface{}) {
-	l.z.Sugar().Fatalw(msg, keysAndValues)
+	l.z.Sugar().Fatalw(msg, keysAndValues...)
 }
 
 func Fatalw(msg string, keysAndValues ...interface{}) {
-	std.z.Sugar().Fatalw(msg, keysAndValues)
+	std.z.Sugar().Fatalw(msg, keysAndValues...)
 }
 
 func (l *zapLogger) Sync() {
