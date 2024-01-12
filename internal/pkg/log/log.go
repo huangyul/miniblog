@@ -1,6 +1,8 @@
 package log
 
 import (
+	"context"
+	"miniblog/internal/pkg/know"
 	"sync"
 	"time"
 
@@ -131,4 +133,23 @@ func (l *zapLogger) Sync() {
 
 func Sync() {
 	_ = std.z.Sync()
+}
+
+func C(ctx context.Context) *zapLogger {
+	return std.C(ctx)
+}
+
+func (l *zapLogger) C(ctx context.Context) *zapLogger {
+	lc := l.clone()
+
+	if requestID := ctx.Value(know.XRequestIDKey); requestID != nil {
+		lc.z = lc.z.With(zap.Any(know.XRequestIDKey, requestID))
+	}
+
+	return lc
+}
+
+func (l *zapLogger) clone() *zapLogger {
+	lc := *l
+	return &lc
 }
