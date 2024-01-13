@@ -7,28 +7,28 @@ import (
 
 var (
 	once sync.Once
-	s    *Datastore
+	s    *datastore
 )
 
 type IStore interface {
 	Users() UserStore
 }
 
-type Datastore struct {
+type datastore struct {
 	db *gorm.DB
 }
 
-func (d *Datastore) Users() UserStore {
+func (d *datastore) Users() UserStore {
 	return NewUser(d.db)
 }
 
-func NewStore(db *gorm.DB) *Datastore {
+func NewStore(db *gorm.DB) *datastore {
 	once.Do(func() {
-		s = &Datastore{
+		s = &datastore{
 			db,
 		}
 	})
 	return s
 }
 
-var _ IStore = &Datastore{}
+var _ IStore = &datastore{}
