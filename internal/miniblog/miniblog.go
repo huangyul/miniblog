@@ -4,8 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"miniblog/internal/pkg/core"
-	"miniblog/internal/pkg/errno"
 	"miniblog/internal/pkg/log"
 	"miniblog/internal/pkg/middleware"
 	"net/http"
@@ -57,15 +55,9 @@ func run() error {
 	mws := []gin.HandlerFunc{gin.Recovery(), middleware.RequestID(), middleware.NoCache, middleware.Cors, middleware.Secure}
 	g.Use(mws...)
 
-	g.NoRoute(func(ctx *gin.Context) {
-		// ctx.JSON(http.StatusNotFound, gin.H{"code": 404, "message": "page not found"})
-		core.WriteResponse(ctx, errno.ErrPageNotFound, nil)
-	})
-
-	g.GET("/", func(ctx *gin.Context) {
-		core.WriteResponse(ctx, nil, map[string]string{"status": "ok"})
-		// ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
-	})
+	if err := installRouters(g); err != nil {
+		return err
+	}
 
 	httpsrv := &http.Server{Addr: viper.GetString("addr"), Handler: g}
 

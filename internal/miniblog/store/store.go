@@ -7,7 +7,7 @@ import (
 
 var (
 	once sync.Once
-	s    *database
+	S    *database
 )
 
 var _ IStore = &database{}
@@ -26,8 +26,8 @@ func (d *database) User() UserStore {
 
 func NewStore(db *gorm.DB) *database {
 	once.Do(func() {
-		s = &database{db: db}
+		S = &database{db: db}
 	})
 
-	return s
+	return S
 }
