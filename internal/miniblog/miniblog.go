@@ -46,6 +46,10 @@ func NewMiniBlogCommand() *cobra.Command {
 }
 
 func run() error {
+	if err := initStore(); err != nil {
+		return err
+	}
+
 	gin.SetMode(viper.GetString("runmode"))
 
 	g := gin.New()
