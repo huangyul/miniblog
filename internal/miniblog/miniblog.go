@@ -4,8 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"miniblog/internal/pkg/known"
 	"miniblog/internal/pkg/log"
 	"miniblog/internal/pkg/middleware"
+	"miniblog/pkg/token"
 	"net/http"
 	"os"
 	"os/signal"
@@ -49,6 +51,9 @@ func run() error {
 	if err := initStore(); err != nil {
 		return err
 	}
+
+	// 设置 token
+	token.Init(viper.GetString("jwt-screct"), known.XUsernameKey)
 
 	gin.SetMode(viper.GetString("runmode"))
 

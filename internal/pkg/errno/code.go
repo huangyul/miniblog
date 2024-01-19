@@ -16,4 +16,16 @@ var (
 		Code:    "InvalidParameter",
 		Message: "parameter verification failed",
 	}
+
+	ErrSignToken = &Errno{
+		HTTP:    http.StatusUnauthorized,
+		Code:    "AuthFailure",
+		Message: "Error occured while signing the json web token",
+	}
+
+	ErrTokenInvaild = &Errno{
+		HTTP:    http.StatusUnauthorized,
+		Code:    "AuthFailure TokenInvalid",
+		Message: "Token was invalid",
+	}
 )
