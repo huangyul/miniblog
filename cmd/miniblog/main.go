@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"miniblog/internal/miniblog"
+)
 
 func main() {
-	fmt.Println("miniblog")
+	cmd := miniblog.NewMiniBlogCommand()
+	if err := cmd.Execute(); err != nil {
+		panic(err)
+	}
 }
