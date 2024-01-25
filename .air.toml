@@ -1,2 +1,0 @@
-cmd = "go build -o _output/miniblog.exe -v cmd/miniblog/main.go"
-bin = "_output/miniblog.exe"
