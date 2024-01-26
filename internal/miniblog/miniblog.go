@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 func NewMiniBlogCommand() *cobra.Command {
@@ -27,10 +28,13 @@ func NewMiniBlogCommand() *cobra.Command {
 		},
 	}
 
+	cobra.OnInitialize(initConfig)
+
 	return cmd
 }
 
 func run() error {
 	fmt.Println("miniblog")
+	fmt.Println(viper.GetString("db.username"))
 	return nil
 }
