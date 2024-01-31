@@ -60,3 +60,5 @@ tags
 
 # Custom
 /_output
+
+*.log

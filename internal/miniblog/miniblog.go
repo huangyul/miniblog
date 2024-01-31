@@ -1,7 +1,9 @@
 package miniblog
 
 import (
+	"encoding/json"
 	"fmt"
+	"miniblog/internal/log"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -24,6 +26,9 @@ func NewMiniBlogCommand() *cobra.Command {
 		},
 
 		RunE: func(cmd *cobra.Command, args []string) error {
+			log := log.NewLogger(logOptions())
+			defer log.Sync()
+
 			return run()
 		},
 	}
@@ -35,6 +40,8 @@ func NewMiniBlogCommand() *cobra.Command {
 
 func run() error {
 	fmt.Println("miniblog")
-	fmt.Println(viper.GetString("db.username"))
+	setting, _ := json.Marshal(viper.AllSettings())
+	log.Infow(string(setting))
+	log.Infow(viper.GetString("db.username"))
 	return nil
 }

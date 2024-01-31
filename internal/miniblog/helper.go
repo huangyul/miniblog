@@ -1,6 +1,7 @@
 package miniblog
 
 import (
+	"miniblog/internal/log"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -21,5 +22,15 @@ func initConfig() {
 
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
+	}
+}
+
+func logOptions() *log.Options {
+	return &log.Options{
+		DisableCaller:     viper.GetBool("log.disable-caller"),
+		DisableStacktrace: viper.GetBool("log.disable-stacktrace"),
+		Level:             viper.GetString("log.level"),
+		Format:            viper.GetString("log.format"),
+		OutputPaths:       viper.GetStringSlice("log.output-paths"),
 	}
 }
