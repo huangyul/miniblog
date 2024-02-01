@@ -1,3 +1,6 @@
+runmode: debug
+addr: :8088
+
 db:
   username: hhh
 # 日志配置
