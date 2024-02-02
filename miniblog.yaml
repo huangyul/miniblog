@@ -1,3 +1,6 @@
+# gin 服务相关配置
+addr: ":8088"
+
 # MySQL 数据库相关配置
 db:
   host: localhost # MySQL 机器 IP 和端口，默认 127.0.0.1:3306
