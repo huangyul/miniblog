@@ -2,6 +2,7 @@ package miniblog
 
 import (
 	"miniblog/internal/pkg/log"
+	"miniblog/internal/pkg/middleware"
 	"net/http"
 	"os"
 
@@ -36,6 +37,10 @@ func run() error {
 	gin.SetMode("debug")
 
 	g := gin.New()
+
+	wm := []gin.HandlerFunc{middleware.RequestId()}
+
+	g.Use(wm...)
 
 	g.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{
