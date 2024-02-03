@@ -1,10 +1,15 @@
 package miniblog
 
 import (
+	"context"
+	"errors"
 	"miniblog/internal/pkg/log"
 	"miniblog/internal/pkg/middleware"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
@@ -38,7 +43,7 @@ func run() error {
 
 	g := gin.New()
 
-	wm := []gin.HandlerFunc{middleware.RequestId()}
+	wm := []gin.HandlerFunc{middleware.Cors(), middleware.NoCache(), middleware.RequestId()}
 
 	g.Use(wm...)
 
@@ -61,12 +66,30 @@ func run() error {
 
 	log.Infow("server is running at %s", "addr", addr)
 
-	err := httpSrv.ListenAndServe()
+	go func() {
+		if err := httpSrv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalw(err.Error())
+			os.Exit(1)
+		}
+	}()
 
-	if err != nil {
-		log.Fatalw(err.Error())
-		os.Exit(1)
+	quit := make(chan os.Signal)
+
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+
+	<-quit
+
+	log.Infow("sutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	if err := httpSrv.Shutdown(ctx); err != nil {
+		log.Errorw("Insecure Server forced to shutdown", "err", err)
+		return err
 	}
+
+	log.Infow("server shutdown success")
 
 	return nil
 }
