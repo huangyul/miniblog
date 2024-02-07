@@ -3,6 +3,8 @@ package miniblog
 import (
 	"context"
 	"errors"
+	"miniblog/internal/pkg/core"
+	"miniblog/internal/pkg/errno"
 	"miniblog/internal/pkg/log"
 	"miniblog/internal/pkg/middleware"
 	"net/http"
@@ -48,13 +50,12 @@ func run() error {
 	g.Use(wm...)
 
 	g.NoRoute(func(ctx *gin.Context) {
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"msg": "not found",
-		})
+		core.WriteResponse(ctx, errno.NotFoundErr, nil)
 	})
 
 	g.GET("/healthz", func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "api is ok")
+		log.C(ctx).Infow("healthz function called")
+		core.WriteResponse(ctx, nil, "api is ok")
 	})
 
 	addr := viper.GetString("addr")

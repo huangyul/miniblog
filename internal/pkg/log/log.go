@@ -1,6 +1,8 @@
 package log
 
 import (
+	"context"
+	know "miniblog/internal/pkg/konw"
 	"sync"
 	"time"
 
@@ -137,4 +139,23 @@ func NewLogger(opts *Options) *zapLogger {
 	zap.RedirectStdLog(z)
 
 	return logger
+}
+
+func C(ctx context.Context) *zapLogger {
+	return std.C(ctx)
+}
+
+func (l *zapLogger) C(ctx context.Context) *zapLogger {
+	lc := l.clone()
+
+	if requestID := ctx.Value(know.XRequestID); requestID != nil {
+		lc.z = lc.z.With(zap.Any(know.XRequestID, requestID))
+	}
+
+	return lc
+}
+
+func (l *zapLogger) clone() *zapLogger {
+	lc := *l
+	return &lc
 }
