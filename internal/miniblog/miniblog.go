@@ -1,10 +1,11 @@
 package miniblog
 
 import (
+	"encoding/json"
 	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"miniblog/internal/pkg/log"
 )
 
 func NewMiniBlogCommand() *cobra.Command {
@@ -23,7 +24,10 @@ func NewMiniBlogCommand() *cobra.Command {
 			if len(cfg) > 0 {
 				configFile = cfg
 			}
-			initConfig()
+
+			// 初始化 log
+			log.Init(logOptions())
+			defer log.Sync()
 
 			return run()
 		},
@@ -39,6 +43,8 @@ func NewMiniBlogCommand() *cobra.Command {
 		},
 	}
 
+	cobra.OnInitialize(initConfig)
+
 	cmd.Flags().StringP("name", "n", "", "--n")
 	cmd.Flags().StringP("config", "c", "", "配置文件路径")
 
@@ -46,9 +52,12 @@ func NewMiniBlogCommand() *cobra.Command {
 }
 
 func run() error {
-	fmt.Println(viper.GetString("db.username"))
 
-	fmt.Println("hello, miniblog")
+	setting, _ := json.Marshal(viper.AllSettings())
+
+	log.Infow(string(setting))
+
+	log.Infow("hello, miniblog")
 
 	return nil
 }
