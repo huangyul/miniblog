@@ -3,6 +3,7 @@ package miniblog
 import (
 	"fmt"
 	"miniblog/internal/pkg/log"
+	"miniblog/internal/pkg/middleware"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -56,6 +57,8 @@ func NewMiniBlogCommand() *cobra.Command {
 func run() error {
 
 	r := gin.Default()
+
+	r.Use(middleware.RequestID())
 
 	r.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{
