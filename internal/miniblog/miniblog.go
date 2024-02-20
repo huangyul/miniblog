@@ -1,11 +1,13 @@
 package miniblog
 
 import (
-	"encoding/json"
 	"fmt"
+	"miniblog/internal/pkg/log"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"miniblog/internal/pkg/log"
 )
 
 func NewMiniBlogCommand() *cobra.Command {
@@ -53,11 +55,22 @@ func NewMiniBlogCommand() *cobra.Command {
 
 func run() error {
 
-	setting, _ := json.Marshal(viper.AllSettings())
+	r := gin.Default()
 
-	log.Infow(string(setting))
+	r.NoRoute(func(ctx *gin.Context) {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"msg": "not found",
+		})
+		log.Infow("apt not found", "api:", ctx.Request.URL.Path)
+	})
 
-	log.Infow("hello, miniblog")
+	r.GET("/healthz", func(ctx *gin.Context) {
+		ctx.String(http.StatusOK, "ok")
+		log.Infow("healthz api")
+	})
 
-	return nil
+	log.Infow("server is running", "addr", viper.GetString("server.addr"))
+	err := r.Run(viper.GetString("server.addr"))
+
+	return err
 }
