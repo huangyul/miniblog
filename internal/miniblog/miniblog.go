@@ -58,7 +58,7 @@ func run() error {
 
 	r := gin.Default()
 
-	r.Use(middleware.RequestID())
+	r.Use(middleware.RequestID(), middleware.Cors())
 
 	r.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{
@@ -69,7 +69,7 @@ func run() error {
 
 	r.GET("/healthz", func(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "ok")
-		log.Infow("healthz api")
+		log.C(ctx).Infow("healthz api")
 	})
 
 	log.Infow("server is running", "addr", viper.GetString("server.addr"))

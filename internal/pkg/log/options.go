@@ -22,6 +22,6 @@ func NewOptions() *Options {
 		DisableStacktrace: false,
 		Level:             zapcore.InfoLevel.String(),
 		Format:            "console",
-		OutputPaths:       []string{"miniblog.log"},
+		OutputPaths:       []string{"miniblog.log", "stdout"},
 	}
 }
