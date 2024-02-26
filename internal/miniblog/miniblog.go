@@ -2,9 +2,10 @@ package miniblog
 
 import (
 	"fmt"
+	"miniblog/internal/pkg/core"
+	"miniblog/internal/pkg/errno"
 	"miniblog/internal/pkg/log"
 	"miniblog/internal/pkg/middleware"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
@@ -61,14 +62,12 @@ func run() error {
 	r.Use(middleware.RequestID(), middleware.Cors())
 
 	r.NoRoute(func(ctx *gin.Context) {
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"msg": "not found",
-		})
+		core.WriteResponse(ctx, errno.ErrPageNotFound, "")
 		log.Infow("apt not found", "api:", ctx.Request.URL.Path)
 	})
 
 	r.GET("/healthz", func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "ok")
+		core.WriteResponse(ctx, nil, map[string]string{"status": "ok"})
 		log.C(ctx).Infow("healthz api")
 	})
 
