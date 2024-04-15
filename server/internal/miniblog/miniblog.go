@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/huangyul/miniblog/internal/pkg/log"
 	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
@@ -19,6 +20,9 @@ func NewMiniBlogCommand() *cobra.Command {
 		Long:         "miniblog server2",
 		SilenceUsage: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			log.Init(log.NewOptions())
+			defer log.Sync()
+
 			return run()
 		},
 		Args: func(cmd *cobra.Command, args []string) error {
@@ -43,8 +47,8 @@ func NewMiniBlogCommand() *cobra.Command {
 
 func run() error {
 	settings, _ := json.Marshal(viper.AllSettings())
-	fmt.Println(string(settings))
+	log.Infow(string(settings))
 
-	fmt.Println(viper.GetString("db.username"))
+	log.Infow(viper.GetString("db.username"))
 	return nil
 }
