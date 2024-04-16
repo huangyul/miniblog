@@ -1,19 +1,10 @@
-import ToDoList, { Todo } from "@/page/todo-list"
+import { RouterProvider } from "react-router-dom"
+import router from "@/router"
 
 function App() {
 
-
-  const todos: Todo[] = [
-    {
-      label: "1",
-      value: "1"
-    }
-  ]
-
   return (
-    <div>
-      <ToDoList arr={todos}></ToDoList>
-    </div>
+    <RouterProvider router={router}></RouterProvider>
   )
 }
 
