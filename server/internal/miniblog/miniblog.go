@@ -1,11 +1,17 @@
 package miniblog
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huangyul/miniblog/internal/pkg/log"
+	"github.com/huangyul/miniblog/internal/pkg/middleware"
 	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
@@ -52,6 +58,8 @@ func run() error {
 
 	server := gin.Default()
 
+	server.Use(middleware.Cors(), middleware.RequestID())
+
 	server.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"code": 10003, "message": "Page not found"})
 	})
@@ -59,10 +67,30 @@ func run() error {
 		ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
 
-	err := server.Run(viper.GetString("addr"))
+	httpSrv := &http.Server{
+		Addr:    viper.GetString("addr"),
+		Handler: server,
+	}
 
-	if err != nil {
-		log.Fatalw(err.Error())
+	go func() {
+		if err := httpSrv.ListenAndServe(); err != nil {
+			log.Fatalw(err.Error())
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	log.Infow("shutting down server")
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	if err := httpSrv.Shutdown(ctx); err != nil {
+		log.Errorw("Insecure Server forced to shutdown", "err", err)
+		return err
 	}
 
 	return nil
