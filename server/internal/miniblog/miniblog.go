@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/huangyul/miniblog/internal/pkg/core"
+	"github.com/huangyul/miniblog/internal/pkg/errno"
 	"github.com/huangyul/miniblog/internal/pkg/log"
 	"github.com/huangyul/miniblog/internal/pkg/middleware"
 	"github.com/spf13/viper"
@@ -60,11 +62,11 @@ func run() error {
 
 	server.Use(middleware.Cors(), middleware.RequestID())
 
-	server.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"code": 10003, "message": "Page not found"})
+	server.NoRoute(func(ctx *gin.Context) {
+		core.WriteResponse(ctx, errno.ErrPageNotFound, nil)
 	})
 	server.GET("/healthz", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{"status": "ok"})
+		core.WriteResponse(ctx, nil, map[string]string{"status": "ok"})
 	})
 
 	httpSrv := &http.Server{
