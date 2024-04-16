@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import "./todo-list.css"
+import "./index.css"
 
 export interface Todo {
   label: string
