@@ -14,6 +14,7 @@ import (
 	"github.com/huangyul/miniblog/internal/pkg/errno"
 	"github.com/huangyul/miniblog/internal/pkg/log"
 	"github.com/huangyul/miniblog/internal/pkg/middleware"
+	"github.com/kataras/iris/v12/core/router"
 	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
@@ -60,7 +61,7 @@ func run() error {
 
 	server := gin.Default()
 
-	server.Use(middleware.Cors(), middleware.RequestID())
+	server.Use(gin.Recovery(), middleware.Cors(), middleware.RequestID())
 
 	server.NoRoute(func(ctx *gin.Context) {
 		core.WriteResponse(ctx, errno.ErrPageNotFound, nil)
@@ -73,6 +74,10 @@ func run() error {
 		Addr:    viper.GetString("addr"),
 		Handler: server,
 	}
+
+	var router router.Router
+
+	router.RegisterUserRoute
 
 	go func() {
 		if err := httpSrv.ListenAndServe(); err != nil {
