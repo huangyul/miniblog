@@ -14,7 +14,6 @@ import (
 	"github.com/huangyul/miniblog/internal/pkg/errno"
 	"github.com/huangyul/miniblog/internal/pkg/log"
 	"github.com/huangyul/miniblog/internal/pkg/middleware"
-	"github.com/kataras/iris/v12/core/router"
 	"github.com/spf13/viper"
 
 	"github.com/spf13/cobra"
@@ -74,10 +73,6 @@ func run() error {
 		Addr:    viper.GetString("addr"),
 		Handler: server,
 	}
-
-	var router router.Router
-
-	router.RegisterUserRoute
 
 	go func() {
 		if err := httpSrv.ListenAndServe(); err != nil {
