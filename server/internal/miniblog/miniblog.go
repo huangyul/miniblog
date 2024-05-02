@@ -68,9 +68,24 @@ func run() error {
 	server.GET("/healthz", func(ctx *gin.Context) {
 		core.WriteResponse(ctx, nil, map[string]string{"status": "ok"})
 	})
+	server.POST("/userlist", func(ctx *gin.Context) {
+		core.WriteResponse(ctx, nil, []struct {
+			Name string `json:"name"`
+			Age  int    `json:"age"`
+		}{
+			{
+				Name: "name1",
+				Age:  1,
+			},
+			{
+				Name: "name2",
+				Age:  2,
+			},
+		})
+	})
 
 	httpSrv := &http.Server{
-		Addr:    viper.GetString("addr"),
+		Addr:    ":8088",
 		Handler: server,
 	}
 
