@@ -15,5 +15,4 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/user/index.vue')
   }
 ]
-
 export default routes

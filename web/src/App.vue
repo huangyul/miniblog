@@ -1,23 +1,15 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import zhCN from 'ant-design-vue/es/locale/zh_CN'
+import 'dayjs/locale/zh-cn'
+import dayjs from 'dayjs'
+import { ref } from 'vue'
 
-
-const router = useRouter()
-
-const toPage = (path: string) => {
-  router.push({ path: path })
-}
-
+dayjs.locale('zh-cn');
+const locale = ref(zhCN)
 </script>
 
 <template>
-  <div>
-    <p @click="toPage('/home')">
-      home
-    </p>
-    <p @click="toPage('/user/23')">
-      user
-    </p>
-    <RouterView></RouterView>
-  </div>
+  <AConfigProvider :locale="locale">
+    <RouterView />
+  </AConfigProvider>
 </template>

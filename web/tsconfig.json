@@ -15,7 +15,7 @@
     "isolatedModules": true, // 要求所有文件都是 ES Module 模块。
     "noEmit": true,// 不输出文件,即编译后不会生成任何js文件
     "esModuleInterop": true, // 允许使用 import 引入使用 export 导出
-
+    "allowSyntheticDefaultImports": true,
     /* Linting */
     "typeRoots": ["./src/types"],
     "strict": true,// 开启所有严格的类型检查
