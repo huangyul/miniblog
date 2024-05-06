@@ -27,8 +27,8 @@ const options = ref<SelectProps['options']>([
   }
 ])
 
-const handleChangeLanguage = (value: string) => {
-  changeLanguage(value as MessageKey)
+const handleChangeLanguage = (value: MessageKey) => {
+  changeLanguage(value)
 }
 </script>
 
@@ -40,12 +40,6 @@ const handleChangeLanguage = (value: string) => {
 
   <a-date-picker v-model:value="value1" />
 
-  <p>{{ $t('warehouse') }}</p>
-
   <p>{{ $t('dashboard') }}</p>
-
-  <p>{{ $t('aaa') }}</p>
-
-
 
 </template>

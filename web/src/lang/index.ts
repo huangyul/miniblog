@@ -1,9 +1,9 @@
 import { createI18n } from 'vue-i18n'
 import { App } from 'vue'
-import zh_CN from './zh'
-import en_GB from './en'
-import ja from './ja'
-import zh_HK from './zh_HK'
+import zh_CN from './zh-CN.json'
+import en_GB from './en.json'
+import ja from './ja.json'
+import zh_HK from './zh-HK.json'
 
 const navlang = navigator.language
 const locallang = (navlang == 'zh_CN' || navlang == 'en_GB') ? navlang : 'zh_CN'
