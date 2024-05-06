@@ -1,3 +1,6 @@
 {
-  "dashboard": "首頁"
+  "dashboard": "首頁",
+  "machine": {
+    "name": "機器名稱"
+  }
 }

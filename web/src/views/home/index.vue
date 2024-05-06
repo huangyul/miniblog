@@ -14,7 +14,7 @@ const options = ref<SelectProps['options']>([
     label: '简体中文'
   },
   {
-    value: 'zh_HK',
+    value: 'zh-HK',
     label: '繁体中文（中国香港）'
   },
   {
@@ -42,4 +42,5 @@ const handleChangeLanguage = (value: MessageKey) => {
 
   <p>{{ $t('dashboard') }}</p>
 
+  <p>{{ $t('machine.name') }}</p>
 </template>

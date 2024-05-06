@@ -1,3 +1,6 @@
 {
-  "dashboard": "表紙"
+  "dashboard": "表紙",
+  "machine": {
+    "name": "マシン名"
+  }
 }
